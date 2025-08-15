@@ -1,0 +1,453 @@
+{
+  "info": {
+    "_postman_id": "oxla-api-collection",
+    "name": "Oxla API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Complete API collection for Oxla backend foundation including email service, usage tracking, and monitoring"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Email Service",
+      "description": "Email service endpoints for creating and managing email jobs",
+      "item": [
+        {
+          "name": "Create Email Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipient\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"content\": \"This is a test email from Oxla API\",\n  \"scheduledAt\": \"2024-12-25T10:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/email",
+              "host": ["{{base_url}}"],
+              "path": ["api", "email"]
+            },
+            "description": "Create a new email job for sending emails"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recipient\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"content\": \"This is a test email from Oxla API\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/email",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "email"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "85"
+                },
+                {
+                  "key": "X-RateLimit-Limit",
+                  "value": "5"
+                },
+                {
+                  "key": "X-RateLimit-Remaining",
+                  "value": "4"
+                },
+                {
+                  "key": "X-RateLimit-Reset",
+                  "value": "2024-12-25T10:05:00.000Z"
+                }
+              ],
+              "body": "{\n  \"message\": \"Email job created successfully\",\n  \"jobId\": \"clx1y2z3a4b5c6d7e8f9\"\n}",
+              "cookie": []
+            },
+            {
+              "name": "Rate Limit Exceeded",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recipient\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"content\": \"This is a test email from Oxla API\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/email",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "email"]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Retry-After",
+                  "value": "60"
+                },
+                {
+                  "key": "X-RateLimit-Limit",
+                  "value": "5"
+                },
+                {
+                  "key": "X-RateLimit-Remaining",
+                  "value": "0"
+                },
+                {
+                  "key": "X-RateLimit-Reset",
+                  "value": "2024-12-25T10:05:00.000Z"
+                }
+              ],
+              "body": "{\n  \"error\": \"Rate limit exceeded\",\n  \"retryAfter\": \"60s\",\n  \"current\": 6,\n  \"limit\": 5\n}",
+              "cookie": []
+            },
+            {
+              "name": "Quota Exceeded",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recipient\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"content\": \"This is a test email from Oxla API\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/email",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "email"]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "X-Quota-Limit",
+                  "value": "500"
+                },
+                {
+                  "key": "X-Quota-Remaining",
+                  "value": "0"
+                },
+                {
+                  "key": "X-Quota-Reset",
+                  "value": "2025-01-01T00:00:00.000Z"
+                }
+              ],
+              "body": "{\n  \"error\": \"Monthly email quota exceeded\",\n  \"current\": 500,\n  \"limit\": 500\n}",
+              "cookie": []
+            }
+          ]
+        },
+        {
+          "name": "Get Email Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/email?status=COMPLETED",
+              "host": ["{{base_url}}"],
+              "path": ["api", "email"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "COMPLETED",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get email jobs for the authenticated user, optionally filtered by status"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/email",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "email"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "456"
+                }
+              ],
+              "body": "{\n  \"jobs\": [\n    {\n      \"id\": \"clx1y2z3a4b5c6d7e8f9\",\n      \"userId\": \"user123\",\n      \"type\": \"SEND\",\n      \"status\": \"COMPLETED\",\n      \"recipient\": \"user@example.com\",\n      \"subject\": \"Test Email\",\n      \"content\": \"This is a test email from Oxla API\",\n      \"completedAt\": \"2024-12-25T10:00:05.000Z\",\n      \"createdAt\": \"2024-12-25T10:00:00.000Z\",\n      \"updatedAt\": \"2024-12-25T10:00:05.000Z\"\n    }\n  ]\n}",
+              "cookie": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Usage Tracking",
+      "description": "Usage tracking and quota management endpoints",
+      "item": [
+        {
+          "name": "Get Usage Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usage",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usage"]
+            },
+            "description": "Get current usage statistics and limits for the authenticated user"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/usage",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "usage"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "678"
+                }
+              ],
+              "body": "{\n  \"plan\": \"PRO\",\n  \"limits\": {\n    \"emailsPerMonth\": 10000,\n    \"emailsPerMinute\": 20,\n    \"storageGB\": 50,\n    \"maxFileSizeMB\": 2048\n  },\n  \"usage\": {\n    \"emailsSent\": 150,\n    \"emailsReceived\": 45,\n    \"emailsSentThisMonth\": 150,\n    \"emailsReceivedThisMonth\": 45\n  },\n  \"remaining\": {\n    \"emailsPerMonth\": 9850,\n    \"emailsPerMinute\": 18\n  }\n}",
+              "cookie": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "description": "Application monitoring and metrics endpoints",
+      "item": [
+        {
+          "name": "Get Prometheus Metrics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/metrics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "metrics"]
+            },
+            "description": "Get application metrics in Prometheus format"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{base_url}}/api/metrics",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "metrics"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain",
+                  "description": "Prometheus metrics format"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, must-revalidate"
+                }
+              ],
+              "body": "# HELP oxla_total_users Total number of users\\n# TYPE oxla_total_users gauge\\noxla_total_users 1250\\n\\n# HELP oxla_email_jobs_total Total number of email jobs\\n# TYPE oxla_email_jobs_total counter\\noxla_email_jobs_total 45678\\n\\n# HELP oxla_email_jobs_by_status Number of email jobs by status\\n# TYPE oxla_email_jobs_by_status gauge\\noxla_email_jobs_by_status{status=\"COMPLETED\"} 43210\\noxla_email_jobs_by_status{status=\"FAILED\"} 1234\\noxla_email_jobs_by_status{status=\"PENDING\"} 1234\\n",
+              "cookie": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OpenAPI Schema",
+      "description": "Get the complete OpenAPI schema for the API",
+      "item": [
+        {
+          "name": "Get OpenAPI Schema",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/openapi",
+              "host": ["{{base_url}}"],
+              "path": ["api", "openapi"]
+            },
+            "description": "Get the complete OpenAPI 3.0 schema for the Oxla API"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{base_url}}/api/openapi",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "openapi"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                }
+              ],
+              "body": "{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"title\": \"Oxla API\",\n    \"version\": \"1.0.0\",\n    \"description\": \"Complete backend foundation API for Oxla project\"\n  },\n  \"paths\": {\n    \"/api/email\": {\n      \"post\": {\n        \"summary\": \"Create email job\",\n        \"tags\": [\"Email\"]\n      }\n    }\n  }\n}",
+              "cookie": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

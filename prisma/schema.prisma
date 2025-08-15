@@ -14,19 +14,153 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  plan          UserPlan @default(FREE)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  emailUsage    EmailUsage[]
+  rateLimits    RateLimit[]
+  files         File[]
+  folders       Folder[]
+  shares        Share[]
+  
+  @@map("users")
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum UserPlan {
+  FREE
+  PRO
+  ENTERPRISE
 }
+
+model EmailUsage {
+  id          String   @id @default(cuid())
+  userId      String
+  month       Int      // 1-12
+  year        Int      // 2024, 2025, etc.
+  emailsSent  Int      @default(0)
+  emailsReceived Int   @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, month, year])
+  @@map("email_usage")
+}
+
+model RateLimit {
+  id          String   @id @default(cuid())
+  userId      String
+  type        RateLimitType
+  count       Int      @default(0)
+  windowStart DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, type, windowStart])
+  @@map("rate_limits")
+}
+
+enum RateLimitType {
+  EMAIL_SEND
+  EMAIL_RECEIVE
+  FILE_UPLOAD
+  FILE_DOWNLOAD
+}
+
+model EmailJob {
+  id          String           @id @default(cuid())
+  userId      String
+  type        EmailJobType
+  status      EmailJobStatus   @default(PENDING)
+  recipient   String
+  subject     String?
+  content     String?
+  retryCount  Int              @default(0)
+  maxRetries  Int              @default(3)
+  scheduledAt DateTime?
+  completedAt DateTime?
+  failedAt    DateTime?
+  error       String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("email_jobs")
+}
+
+enum EmailJobType {
+  SEND
+  RECEIVE
+}
+
+enum EmailJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  RETRYING
+}
+
+model File {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  path        String   @unique
+  size        Int      // in bytes
+  mimeType    String?
+  folderId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder      Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  shares      Share[]
+  
+  @@map("files")
+}
+
+model Folder {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  parentId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent      Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Folder[] @relation("FolderHierarchy")
+  files       File[]
+  
+  @@map("folders")
+}
+
+model Share {
+  id          String       @id @default(cuid())
+  userId      String
+  fileId      String
+  token       String       @unique
+  permission  SharePermission
+  expiresAt   DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file        File         @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  
+  @@map("shares")
+}
+
+enum SharePermission {
+  VIEW
+  EDIT
+}
+
