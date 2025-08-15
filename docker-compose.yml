@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: oxlas-postgres
+    environment:
+      POSTGRES_DB: oxlas_suite
+      POSTGRES_USER: oxlas_user
+      POSTGRES_PASSWORD: oxlas_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - oxlas-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: oxlas-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - oxlas-network
+
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: oxlas-celery-worker
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=oxlas_user
+      - DB_PASS=oxlas_password
+      - DB_NAME=oxlas_suite
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # Email service configuration
+      - SMTP_HOST=localhost
+      - SMTP_PORT=587
+      - SMTP_USER=
+      - SMTP_PASSWORD=
+      - SMTP_USE_TLS=true
+      - IMAP_HOST=localhost
+      - IMAP_PORT=993
+      - IMAP_USE_SSL=true
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - ./backend/storage:/app/storage
+      - ./backend/logs:/app/logs
+      - ./backend/drive_storage:/app/drive_storage
+    networks:
+      - oxlas-network
+    command: celery -A app.celery_app worker --loglevel=info
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: oxlas-celery-beat
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=oxlas_user
+      - DB_PASS=oxlas_password
+      - DB_NAME=oxlas_suite
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - ./backend/drive_storage:/app/drive_storage
+    networks:
+      - oxlas-network
+    command: celery -A app.celery_app beat --loglevel=info
+
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: oxlas-flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    networks:
+      - oxlas-network
+    command: celery -A app.celery_app flower
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: oxlas-backend
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=oxlas_user
+      - DB_PASS=oxlas_password
+      - DB_NAME=oxlas_suite
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - REFRESH_TOKEN_EXPIRE_DAYS=7
+      - DEBUG=false
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # Email service configuration
+      - SMTP_HOST=localhost
+      - SMTP_PORT=587
+      - SMTP_USER=
+      - SMTP_PASSWORD=
+      - SMTP_USE_TLS=true
+      - IMAP_HOST=localhost
+      - IMAP_PORT=993
+      - IMAP_USE_SSL=true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - ./backend/storage:/app/storage
+      - ./backend/logs:/app/logs
+      - ./backend/drive_storage:/app/drive_storage
+    networks:
+      - oxlas-network
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  oxlas-network:
+    driver: bridge
