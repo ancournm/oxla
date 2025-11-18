@@ -12,8 +12,7 @@ import aiofiles
 
 from celery import current_task
 from app.celery_app import celery_app
-from app.models import get_db, User, Email, EmailAttachment, EmailStatus
-from app.services.mail import EmailService
+from app.models import get_db, User, Mailbox, Alias, Email, EmailAttachment, EmailStatus
 from app.utils import get_logger
 from app.config import settings
 
@@ -140,7 +139,7 @@ def send_email_task(
         raise self.retry(exc=e, countdown=60 * (2 ** self.request.retries))
 
 @celery_app.task(bind=True, max_retries=3, default_retry_delay=60)
-def receive_email_task(self, user_id: int) -> Dict[str, Any]:
+async def receive_email_task(self, user_id: int) -> Dict[str, Any]:
     """Receive emails asynchronously"""
     try:
         logger.info(f"Starting email receive task for user {user_id}")
@@ -152,8 +151,60 @@ def receive_email_task(self, user_id: int) -> Dict[str, Any]:
             raise ValueError(f"User {user_id} not found")
         
         # Simulate email receiving (in real implementation, this would connect to IMAP)
-        email_service = EmailService()
-        emails = await email_service.receive_emails(user_id, db)
+        # For now, we'll just return existing emails from database
+        db = next(get_db())
+        user = db.query(User).filter(User.id == user_id).first()
+        
+        if not user:
+            raise ValueError(f"User {user_id} not found")
+        
+        # Get user's inbox
+        inbox = db.query(Mailbox).filter(
+            Mailbox.user_id == user_id,
+            Mailbox.name == "Inbox"
+        ).first()
+        
+        if not inbox:
+            inbox = Mailbox(
+                user_id=user_id,
+                name="Inbox",
+                email_address=user.email
+            )
+            db.add(inbox)
+            db.commit()
+        
+        # Get existing emails from database
+        emails = db.query(Email).filter(
+            Email.user_id == user_id,
+            Email.mailbox_id == inbox.id
+        ).order_by(Email.received_at.desc()).all()
+        
+        result = []
+        for email in emails:
+            email_data = {
+                "id": email.id,
+                "sender": email.sender,
+                "recipient": email.recipient,
+                "subject": email.subject,
+                "body_text": email.body_text,
+                "status": email.status.value,
+                "is_read": email.is_read,
+                "is_spam": email.is_spam,
+                "created_at": email.created_at.isoformat(),
+                "received_at": email.received_at.isoformat() if email.received_at else None,
+                "attachments": []
+            }
+            
+            # Get attachments
+            for attachment in email.attachments:
+                email_data["attachments"].append({
+                    "id": attachment.id,
+                    "filename": attachment.filename,
+                    "file_size": attachment.file_size,
+                    "content_type": attachment.content_type
+                })
+            
+            result.append(email_data)
         
         logger.info(f"Received {len(emails)} emails for user {user_id}")
         

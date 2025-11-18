@@ -1,5 +1,5 @@
 from .database import (
-    Base, User, UserPlan, EmailStatus, get_db,
+    Base, User, UserPlan, EmailStatus, get_db, engine,
     EmailVerificationToken, PasswordResetToken, UserUsage,
     Mailbox, Alias, Email, EmailAttachment,
     DriveFile, DriveFolder, DriveShare
