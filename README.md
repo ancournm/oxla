@@ -1,117 +1,122 @@
-# Oxla Backend Foundation
+# 🚀 Oxla Suite - Complete Workspace Platform
 
-A comprehensive backend foundation for the Oxla project, featuring email service, file storage, user management, and monitoring capabilities.
+A comprehensive all-in-one workspace platform competing with Google Workspace and Microsoft 365. Built with Next.js, FastAPI, and modern web technologies.
 
-## 🚀 Features Implemented
+## ✨ Features
 
-### Core Infrastructure
-- **Database**: Prisma ORM with SQLite database
-- **API**: RESTful API with Next.js App Router
-- **Authentication**: NextAuth.js integration
-- **WebSocket**: Real-time communication with Socket.IO
-- **AI Integration**: z-ai-web-dev-sdk for AI capabilities
+### 🔐 Authentication System
+- **User Registration & Login**: Secure JWT-based authentication
+- **Email Verification**: Account verification via email tokens
+- **Password Reset**: Secure password recovery system
+- **Session Management**: Persistent user sessions with auto-refresh
+- **Plan-based Access**: Free, Pro, and Enterprise tiers
 
-### Email Service
-- **Background Task Queue**: Redis-based email processing with retry logic
-- **Usage Limits**: Plan-based email quotas (Free: 500/month, Pro: 10,000/month, Enterprise: Unlimited)
-- **Rate Limiting**: Per-minute limits to prevent abuse (Free: 5/min, Pro: 20/min, Enterprise: 100/min)
-- **Monitoring**: Comprehensive email job tracking and metrics
+### 📧 Email Service
+- **Email Composition**: Rich text email composer with attachments
+- **Smart Aliases**: Create disposable and permanent email aliases
+- **Inbox Management**: Full inbox with read/unread status tracking
+- **Spam Protection**: Mark emails as spam with filtering
+- **Real-time Updates**: Live email status and notifications
 
-### File Storage (Drive Service)
-- **File Management**: Upload, download, delete files with metadata
-- **Quota Enforcement**: Plan-based storage limits (Free: 5GB, Pro: 50GB, Enterprise: Unlimited)
-- **Folder Organization**: Hierarchical folder structure with CRUD operations
-- **Sharing**: Secure share links with time-limited access and permissions
-- **Security**: JWT-based authentication and virus scan integration
+### 💾 File Storage (Drive)
+- **File Management**: Upload, organize, and manage files
+- **Folder Structure**: Hierarchical folder organization
+- **Secure Sharing**: Time-limited share links with permissions
+- **Virus Scanning**: Automatic virus scanning for uploads
+- **Quota Management**: Plan-based storage limits
 
-### Monitoring & Metrics
-- **Prometheus Metrics**: Comprehensive application metrics endpoint
-- **Queue Monitoring**: Real-time email queue statistics
-- **User Analytics**: Active users, usage patterns, and plan distribution
-- **Performance Tracking**: Email success rates, processing times, and system health
+### 📊 User Management
+- **Profile Management**: Complete user profile system
+- **Usage Tracking**: Real-time usage statistics and limits
+- **Plan Features**: Tiered feature access (Free/Pro/Enterprise)
+- **Analytics Dashboard**: Comprehensive usage and performance metrics
 
-### Developer Experience
-- **OpenAPI Schema**: Complete API documentation in OpenAPI 3.0 format
-- **Postman Collection**: Ready-to-use API testing collection
-- **Comprehensive Documentation**: Setup guides, API references, and deployment instructions
+## 🛠️ Technology Stack
 
-## 📋 Plan Features
+### Frontend
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4 with shadcn/ui components
+- **State Management**: React Context + Zustand
+- **Authentication**: NextAuth.js v4
+- **UI Components**: Complete shadcn/ui component library
+- **Icons**: Lucide React Icons
 
-| Feature | Free | Pro | Enterprise |
-|---------|------|-----|------------|
-| **Email Limits** | 500/month | 10,000/month | Unlimited |
-| **Email Rate Limit** | 5/minute | 20/minute | 100/minute |
-| **Storage** | 5 GB total | 50 GB total | Unlimited |
-| **Max File Size** | 50 MB | 2 GB | Unlimited |
-| **File Upload Rate** | 10/minute | 50/minute | 200/minute |
-| **File Download Rate** | 50/minute | 200/minute | 1000/minute |
+### Backend
+- **Framework**: FastAPI with Python 3.11+
+- **Database**: SQLite (dev) / PostgreSQL (prod) with Prisma ORM
+- **Authentication**: JWT with access/refresh tokens
+- **API Documentation**: Auto-generated OpenAPI/Swagger
+- **Task Queue**: Redis-based background job processing
+- **Monitoring**: Prometheus metrics and health checks
 
-## 🏗️ Project Structure
+### Infrastructure
+- **Containerization**: Docker and Docker Compose
+- **Database**: PostgreSQL with Alembic migrations
+- **Caching**: Redis for session and background jobs
+- **Monitoring**: Prometheus + Grafana stack
+- **File Storage**: Local storage with cloud sync capabilities
 
-```
-oxla/
-├── prisma/
-│   └── schema.prisma              # Database schema
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── auth/              # Authentication endpoints
-│   │   │   ├── email/             # Email service endpoints
-│   │   │   ├── usage/             # Usage tracking endpoints
-│   │   │   ├── metrics/           # Monitoring endpoints
-│   │   │   ├── openapi/           # OpenAPI schema endpoint
-│   │   │   ├── ai/                # AI integration endpoints
-│   │   │   ├── search/            # Web search endpoints
-│   │   │   └── images/            # Image generation endpoints
-│   │   ├── layout.tsx             # Root layout
-│   │   ├── page.tsx              # Home page
-│   │   └── globals.css           # Global styles
-│   ├── components/
-│   │   └── ui/                   # UI components
-│   ├── hooks/                     # Custom React hooks
-│   ├── lib/
-│   │   ├── db.ts                 # Database client
-│   │   ├── auth.ts               # Authentication configuration
-│   │   ├── socket.ts             # WebSocket setup
-│   │   ├── redis.ts              # Redis client
-│   │   ├── usage-limits.ts       # Usage limits and rate limiting
-│   │   ├── email-service.ts      # Email service implementation
-│   │   ├── email-queue-worker.ts # Email queue worker
-│   │   └── middleware.ts         # Rate limiting middleware
-│   └── globals.css
-├── docs/
-│   └── postman/
-│       └── oxla-api-collection.json  # Postman API collection
-├── worker.js                      # Email worker script
-├── Dockerfile.worker              # Worker Docker configuration
-├── docker-compose.yml            # Container orchestration
-├── prometheus.yml               # Prometheus configuration
-├── package.json
-├── tailwind.config.ts
-├── tsconfig.json
-├── next.config.ts
-└── .env.example                  # Environment variables template
-```
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ 
-- Docker and Docker Compose
-- Redis (for background tasks and caching)
+- Python 3.11+
+- Git
 
-### 1. Install Dependencies
+### Option 1: Automated Setup (Recommended)
+
+#### Linux/macOS
+```bash
+git clone https://github.com/ancourn/Oxla.git
+cd Oxla
+git checkout backend-foundation-complete
+chmod +x setup.sh
+./setup.sh
+```
+
+#### Windows
+```cmd
+git clone https://github.com/ancourn/Oxla.git
+cd Oxla
+git checkout backend-foundation-complete
+setup.bat
+```
+
+### Option 2: Manual Setup
+
+#### 1. Clone Repository
+```bash
+git clone https://github.com/ancourn/Oxla.git
+cd Oxla
+git checkout backend-foundation-complete
+```
+
+#### 2. Environment Configuration
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration
+nano .env
+```
+
+#### 3. Install Dependencies
+
+**Frontend (Next.js):**
 ```bash
 npm install
 ```
 
-### 2. Set Up Environment Variables
+**Backend (Python):**
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
+cd backend
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-### 3. Set Up Database
+#### 4. Database Setup
 ```bash
 # Generate Prisma client
 npm run db:generate
@@ -120,64 +125,173 @@ npm run db:generate
 npm run db:push
 ```
 
-### 4. Start Services with Docker
+#### 5. Start Services
+
+**Using Docker (Recommended):**
 ```bash
-# Start all services (PostgreSQL, Redis, Next.js, Email Worker, Monitoring)
-docker-compose up -d
+docker-compose up -d --build
 ```
 
-### 5. Start Development Server
+**Manual Setup:**
 ```bash
+# Start backend
+cd backend
+source venv/bin/activate
+python auth_server.py
+
+# Start frontend (new terminal)
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`
+## 🌐 Access Points
 
-## 🔧 API Endpoints
+### Web Application
+- **Main App**: http://localhost:3000
+- **Email Service**: http://localhost:3000/email
+- **User Dashboard**: http://localhost:3000 (after login)
 
-### Email Service
-- `POST /api/email` - Create email job
-- `GET /api/email` - Get email jobs (with optional status filter)
-
-### Usage Tracking
-- `GET /api/usage` - Get current usage statistics and limits
+### API Endpoints
+- **API Root**: http://localhost:8000/
+- **Health Check**: http://localhost:8000/health
+- **API Documentation**: http://localhost:8000/docs
+- **Authentication**: http://localhost:8000/auth/*
+- **Email Service**: http://localhost:8000/mail/*
+- **File Storage**: http://localhost:8000/drive/*
 
 ### Monitoring
-- `GET /api/metrics` - Get Prometheus metrics
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3001 (admin/admin)
+- **Flower (Celery)**: http://localhost:5555
 
-### Developer Tools
-- `GET /api/openapi` - Get OpenAPI schema
-- `/docs/postman/` - Postman API collection
+## 📋 Plan Features
 
-## 📊 Monitoring
+| Feature | Free | Pro | Enterprise |
+|---------|------|------------|
+| **Email Limits** | 500/month | 10,000/month | Unlimited |
+| **Email Rate Limit** | 5/minute | 20/minute | 100/minute |
+| **Storage** | 5 GB total | 50 GB total | Unlimited |
+| **Max File Size** | 50 MB | 2 GB | Unlimited |
+| **File Upload Rate** | 10/minute | 50/minute | 200/minute |
+| **File Download Rate** | 50/minute | 200/minute | 1000/minute |
+| **Email Aliases** | 5 | Unlimited | Unlimited |
+| **API Access** | Basic | Advanced | Full |
 
-### Prometheus Metrics
-Access metrics at `http://localhost:3000/api/metrics`
+## 🏗️ Project Structure
 
-Key metrics include:
-- `oxla_total_users` - Total number of users
-- `oxla_email_jobs_total` - Total email jobs
-- `oxla_email_jobs_by_status` - Jobs by status
-- `oxla_email_queue_length` - Current queue length
-- `oxla_total_files` - Total files stored
-- `oxla_active_users` - Active users (24h)
+```
+Oxla/
+├── backend/                 # Python FastAPI backend
+│   ├── app/                # Application code
+│   │   ├── api/           # API routes
+│   │   ├── models/         # Database models
+│   │   ├── services/       # Business logic
+│   │   ├── utils/          # Utility functions
+│   │   └── middleware/     # Custom middleware
+│   ├── alembic/            # Database migrations
+│   ├── requirements.txt     # Python dependencies
+│   └── auth_server.py     # Backend server
+├── src/                    # Next.js frontend
+│   ├── app/               # Next.js app routes
+│   │   ├── api/           # API routes
+│   │   ├── email/         # Email page
+│   │   └── globals.css    # Global styles
+│   ├── components/         # React components
+│   │   ├── auth/           # Auth components
+│   │   ├── dashboard/      # Dashboard components
+│   │   ├── email/          # Email components
+│   │   └── ui/             # UI components
+│   ├── contexts/           # React contexts
+│   └── lib/               # Utility libraries
+├── prisma/                 # Database schema
+├── public/                 # Static assets
+├── docker-compose.yml       # Docker configuration
+├── setup.sh               # Unix setup script
+├── setup.bat              # Windows setup script
+└── README.md              # This file
+```
 
-### Grafana Dashboard
-Access Grafana at `http://localhost:3001` (admin/admin)
+## 🔧 Configuration
 
-### Flower (Celery Monitoring)
-Access Flower at `http://localhost:5555`
+### Environment Variables
 
-## 🛠️ Development
+#### Frontend (.env)
+```env
+DATABASE_URL="file:./db/custom.db"
+NEXTAUTH_SECRET="your-super-secret-jwt-key-change-in-production"
+NEXTAUTH_URL="http://localhost:3000"
+JWT_SECRET="your-jwt-secret-change-in-production"
+```
+
+#### Backend (.env)
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=oxlas_user
+DB_PASS=oxlas_password
+DB_NAME=oxlas_suite
+JWT_SECRET="your-super-secret-jwt-key-change-in-production"
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
+DEBUG=false
+```
+
+### Database Configuration
+
+#### SQLite (Development)
+```env
+DATABASE_URL="file:./db/custom.db"
+```
+
+#### PostgreSQL (Production)
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/oxlas_suite"
+```
+
+## 🚀 Deployment
+
+### Development
+```bash
+# Start all services
+docker-compose up -d --build
+
+# Or manual setup
+./setup.sh  # Unix/Linux
+setup.bat     # Windows
+```
+
+### Production
+
+#### Using Docker
+```bash
+# Build and run production containers
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+#### Manual Deployment
+```bash
+# Build Next.js application
+npm run build
+
+# Start production server
+npm start
+
+# Start backend with production settings
+cd backend
+source venv/bin/activate
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+## 🧪 Development
 
 ### Running Tests
 ```bash
-# Run all tests
+# Frontend tests
 npm test
 
-# Run specific test files
-npm test -- email.test.ts
-npm test -- rate-limits.test.ts
+# Backend tests
+cd backend
+python -m pytest
 ```
 
 ### Code Quality
@@ -192,72 +306,50 @@ npm run format
 ### Database Migrations
 ```bash
 # Create new migration
-npx prisma migrate dev --name migration_name
+cd backend
+alembic revision --autogenerate -m "description"
 
 # Apply migrations
-npx prisma migrate deploy
-
-# Reset database
-npx prisma migrate reset
+alembic upgrade head
 ```
 
 ## 🔒 Security Features
 
 ### Authentication
-- JWT-based authentication with NextAuth.js
-- Secure session management
-- Role-based access control
-
-### Rate Limiting
-- Redis-based rate limiting
-- Plan-specific limits
-- Graceful degradation with proper HTTP status codes
+- JWT-based authentication with access/refresh tokens
+- Password hashing with bcrypt
+- Email verification system
+- Rate limiting and plan enforcement
+- CORS middleware configuration
 
 ### Data Protection
-- Encrypted sensitive data
-- Secure file storage with access controls
+- Encrypted sensitive data storage
+- SQL injection prevention with ORM
+- XSS protection with React
+- File upload validation and virus scanning
 - Audit logging for all operations
 
-## 📈 Performance
+### API Security
+- Input validation with Pydantic
+- Rate limiting per user and plan
+- HTTPS enforcement in production
+- API key authentication for external access
+- Request/response logging
 
-### Email Processing
-- Background task queue with Redis
-- Retry logic with exponential backoff
-- Concurrent processing with configurable limits
+## 📊 Monitoring
 
-### File Storage
-- Chunked uploads for large files
-- Streaming downloads
-- Efficient metadata storage
+### Metrics
+- Application performance metrics
+- User activity and usage tracking
+- Email service statistics
+- File storage analytics
+- System health monitoring
 
-### Caching
-- Redis-based caching for frequently accessed data
-- Cache invalidation strategies
-- Performance monitoring
-
-## 🚀 Deployment
-
-### Production Setup
-1. **Environment Configuration**: Set up production environment variables
-2. **Database**: Use PostgreSQL in production (not SQLite)
-3. **Redis**: Use managed Redis service (ElastiCache, etc.)
-4. **Storage**: Use cloud storage (S3, GCS, etc.) for file storage
-5. **Monitoring**: Set up comprehensive monitoring and alerting
-
-### Docker Deployment
-```bash
-# Build and run production containers
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-### Manual Deployment
-```bash
-# Build Next.js application
-npm run build
-
-# Start production server
-npm start
-```
+### Logging
+- Structured logging with loguru
+- Request/response logging
+- Error tracking and debugging
+- Log rotation and archiving
 
 ## 🤝 Contributing
 
@@ -283,8 +375,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For support and questions:
 - Create an issue on GitHub
 - Check the documentation
+- Review the code comments
 - Contact the development team
 
 ---
 
-**Built with ❤️ using Next.js, Prisma, Redis, and modern web technologies**
+**Built with ❤️ using Next.js, FastAPI, and modern web technologies**
