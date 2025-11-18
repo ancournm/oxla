@@ -26,6 +26,7 @@ model User {
   files         File[]
   folders       Folder[]
   shares        Share[]
+  emailJobs     EmailJob[]
   
   @@map("users")
 }

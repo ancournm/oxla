@@ -23,7 +23,8 @@ class Settings:
     
     @property
     def DATABASE_URL(self) -> str:
-        return f"postgresql://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        # Use SQLite for local development without Docker
+        return "sqlite:///./oxlas_backend.db"
     
     class Config:
         env_file = ".env"

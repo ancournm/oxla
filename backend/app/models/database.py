@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Boolean, ForeignKey, Text, LargeBinary
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum, Boolean, ForeignKey, Text, LargeBinary, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
@@ -206,7 +206,14 @@ class DriveShare(Base):
     file = relationship("DriveFile", back_populates="shares")
 
 # Database setup
-engine = create_engine(settings.DATABASE_URL)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Configure engine for SQLite
+engine = create_engine(
+    settings.DATABASE_URL,
+    connect_args={"check_same_thread": False}  # SQLite specific
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():

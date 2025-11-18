@@ -5,9 +5,6 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
 from app.config import settings
-from app.utils import get_logger
-
-logger = get_logger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -47,6 +44,9 @@ class AuthManager:
     @staticmethod
     def create_email_verification_token(email: str) -> str:
         """Create email verification token"""
+        from app.utils import get_logger
+        logger = get_logger(__name__)
+        
         expire = datetime.utcnow() + timedelta(hours=24)  # 24 hour expiry
         to_encode = {"sub": email, "exp": expire, "type": "email_verification", "jti": str(uuid.uuid4())}
         encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -56,6 +56,9 @@ class AuthManager:
     @staticmethod
     def create_password_reset_token(email: str) -> str:
         """Create password reset token"""
+        from app.utils import get_logger
+        logger = get_logger(__name__)
+        
         expire = datetime.utcnow() + timedelta(hours=1)  # 1 hour expiry
         to_encode = {"sub": email, "exp": expire, "type": "password_reset", "jti": str(uuid.uuid4())}
         encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -65,6 +68,9 @@ class AuthManager:
     @staticmethod
     def verify_token(token: str, token_type: str = "access") -> dict:
         """Verify JWT token and return payload"""
+        from app.utils import get_logger
+        logger = get_logger(__name__)
+        
         try:
             payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
             
@@ -96,6 +102,9 @@ class AuthManager:
     @staticmethod
     def create_tokens(email: str) -> dict:
         """Create both access and refresh tokens"""
+        from app.utils import get_logger
+        logger = get_logger(__name__)
+        
         access_token = AuthManager.create_access_token(data={"sub": email})
         refresh_token = AuthManager.create_refresh_token(data={"sub": email})
         
