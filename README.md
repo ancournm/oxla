@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 Oxla Suite - Complete Workspace Platform
 
 A comprehensive all-in-one workspace platform competing with Google Workspace and Microsoft 365. Built with Next.js, FastAPI, and modern web technologies.
@@ -381,3 +382,6 @@ For support and questions:
 ---
 
 **Built with ❤️ using Next.js, FastAPI, and modern web technologies**
+=======
+# oxla
+>>>>>>> 25d65d9595011995a027f3b570cab5f834544833
