@@ -19,13 +19,14 @@ class UserCreate(BaseModel):
     password: str
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    username: str
     password: str
 
 class UserResponse(BaseModel):
     id: int
     name: str
     email: str
+    username: str
     plan: str
     is_verified: bool
     created_at: str
@@ -122,12 +123,17 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=TokenResponse)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Login user"""
-    user = db.query(User).filter(User.email == user_data.email).first()
+    # Try to find user by username first, then by email
+    user = db.query(User).filter(User.username == user_data.username).first()
+    
+    # If not found by username, try email (for backward compatibility)
+    if not user:
+        user = db.query(User).filter(User.email == user_data.username).first()
     
     if not user or not AuthManager.verify_password(user_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+            detail="Incorrect username or password"
         )
     
     if not user.is_active:
@@ -137,9 +143,9 @@ async def login(user_data: UserLogin, db: Session = Depends(get_db)):
         )
     
     # Create tokens
-    tokens = AuthManager.create_tokens(user.email)
+    tokens = AuthManager.create_tokens(user.email if user.email else user.username)
     
-    logger.info(f"User logged in: {user.email}")
+    logger.info(f"User logged in: {user.username if user.username else user.email}")
     
     return tokens
 
@@ -279,6 +285,7 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
         id=current_user.id,
         name=current_user.name,
         email=current_user.email,
+        username=current_user.username,
         plan=current_user.plan.value,
         is_verified=current_user.is_verified,
         created_at=current_user.created_at.isoformat(),

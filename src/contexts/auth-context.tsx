@@ -6,6 +6,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  username: string;
   plan: string;
   is_verified: boolean;
   created_at: string;
@@ -23,7 +24,7 @@ interface AuthContextType {
   user: User | null;
   tokens: AuthTokens | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
@@ -73,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
       const response = await fetch('http://localhost:8000/auth/login', {
@@ -81,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (!response.ok) {
